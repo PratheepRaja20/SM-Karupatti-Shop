@@ -19,7 +19,10 @@ public class WebConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(clientUrl, "http://localhost:5173"));
+        config.setAllowedOrigins(List.of(
+                clientUrl,
+                "http://localhost:5173",
+                "https://sm-karupatti-shop.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
