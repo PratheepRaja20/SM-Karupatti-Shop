@@ -42,43 +42,43 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder builder = 
-            http.getSharedObject(org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder.class);
+        org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder builder = http
+                .getSharedObject(
+                        org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder.class);
         builder.userDetailsService(userDetailsService)
-               .passwordEncoder(passwordEncoder());
+                .passwordEncoder(passwordEncoder());
         return builder.build();
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/health").permitAll()
-                .requestMatchers("GET", "/api/products/**").permitAll()
-                .requestMatchers("GET", "/api/reviews").permitAll()
-                .requestMatchers("POST", "/api/contact").permitAll()
-                .requestMatchers("POST", "/api/orders").permitAll()
-                // Admin-only
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("POST", "/api/products/**").hasRole("ADMIN")
-                .requestMatchers("PUT", "/api/products/**").hasRole("ADMIN")
-                .requestMatchers("DELETE", "/api/products/**").hasRole("ADMIN")
-                .requestMatchers("PUT", "/api/reviews/**").hasRole("ADMIN")
-                .requestMatchers("DELETE", "/api/reviews/**").hasRole("ADMIN")
-                .requestMatchers("GET", "/api/contact/**").hasRole("ADMIN")
-                .requestMatchers("PUT", "/api/contact/**").hasRole("ADMIN")
-                .requestMatchers("DELETE", "/api/contact/**").hasRole("ADMIN")
-                .requestMatchers("GET", "/api/orders").hasRole("ADMIN")
-                .requestMatchers("PUT", "/api/orders/**").hasRole("ADMIN")
-                // Everything else requires authentication
-                .anyRequest().authenticated()
-            )
-            .authenticationProvider(authProvider())
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/health/**").permitAll()
+                        .requestMatchers("GET", "/api/products/**").permitAll()
+                        .requestMatchers("GET", "/api/reviews").permitAll()
+                        .requestMatchers("POST", "/api/contact").permitAll()
+                        .requestMatchers("POST", "/api/orders").permitAll()
+                        // Admin-only
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("POST", "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers("PUT", "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers("DELETE", "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers("PUT", "/api/reviews/**").hasRole("ADMIN")
+                        .requestMatchers("DELETE", "/api/reviews/**").hasRole("ADMIN")
+                        .requestMatchers("GET", "/api/contact/**").hasRole("ADMIN")
+                        .requestMatchers("PUT", "/api/contact/**").hasRole("ADMIN")
+                        .requestMatchers("DELETE", "/api/contact/**").hasRole("ADMIN")
+                        .requestMatchers("GET", "/api/orders").hasRole("ADMIN")
+                        .requestMatchers("PUT", "/api/orders/**").hasRole("ADMIN")
+                        // Everything else requires authentication
+                        .anyRequest().authenticated())
+                .authenticationProvider(authProvider())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
