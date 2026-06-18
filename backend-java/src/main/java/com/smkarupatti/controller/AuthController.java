@@ -58,6 +58,27 @@ public class AuthController {
         return response;
     }
 
+    @GetMapping("/create-admin")
+    public String createAdmin() {
+
+        if (!userRepository.existsByEmail("smkarupattishop@gmail.com")) {
+
+            User admin = User.builder()
+                    .name("Admin")
+                    .email("smkarupattishop@gmail.com")
+                    .phone("9976941156")
+                    .password(passwordEncoder.encode("smkarupattishop@2026"))
+                    .role(User.Role.ADMIN)
+                    .build();
+
+            userRepository.save(admin);
+
+            return "Admin Created";
+        }
+
+        return "Admin Already Exists";
+    }
+
     // POST /api/auth/register
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest req) {
@@ -144,6 +165,5 @@ public class AuthController {
         String token = jwtTokenProvider.generateToken(user.getId());
         return ResponseEntity.ok(buildAuthResponse(user, token));
     }
-
 
 }
